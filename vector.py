@@ -81,14 +81,15 @@ class Vector:
 
     def elo(self,player_name):
         point = self.players[player_name]["point"]
+
         a = 0
 
         for stat in point:
             a += math.pow(stat,2)
 
-        elo = math.sqrt(a)
+        elo = int(math.sqrt(a)/max(self.players[player_name]["matches"],1))
 
-        self.players[player_name]["elo"] = elo/self.players[player_name]["matches"]
+        self.players[player_name]["elo"] = elo
 
         return elo
         
@@ -137,8 +138,6 @@ def random_players(vectorDB,num_of_players, num_of_games):
             game_stat = np.random.randint(0, 10,vectorDB.dimensions) 
             vectorDB.update(f"player_{p}",game_stat)
 
-import matplotlib.pyplot as plt
-import numpy as np
 
 def plot_lobby(lobby_elos, player_searching_elo):
     players_count = len(lobby_elos)
@@ -193,10 +192,10 @@ def plot_lobby(lobby_elos, player_searching_elo):
 
 if __name__ == "__main__":
     start = time.time()
-    vectorDB = Vector(3, np.array([1.2, 1.0, 1.1]))
+    vectorDB = Vector(9, np.array([1.2, 1.0, 1.1]))
     print(f'VectorDB Initialized in {time.time() - start}')
     start = time.time()
-    random_players(vectorDB,1000,5)
+    random_players(vectorDB,5000,5)
     print(f'VectorDB Filled with dummy data in {time.time() - start}')
     start = time.time()
 
